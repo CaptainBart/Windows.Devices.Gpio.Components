@@ -6,3 +6,4 @@ The library contains:
 * BlinkAnimation
 * UltraSonic Sensor
 * Software PWM Driver
+* L293d H-bridge motor driver
