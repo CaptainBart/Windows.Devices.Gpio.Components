@@ -34,8 +34,9 @@ namespace TestApp
         {
             _deferral = taskInstance.GetDeferral();
 
-            this.UCSensor();
-            this.SoftPwm();
+            //this.UCSensor();
+            //this.SoftPwm();
+            this.L293dTest();
         }
 
         private void UCSensor()
@@ -49,11 +50,21 @@ namespace TestApp
         private void SoftPwm()
         {
             _drivers = new SoftPwmDriver[1];
-            _drivers[0] = new SoftPwmDriver(5);
+            _drivers[0] = new SoftPwmDriver(18);
             _drivers[0].Enable();
 
             _timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_PwmTick, TimeSpan.FromMilliseconds(50));
 
+        }
+
+        private void L293dTest()
+        {
+            var leftMotor = new L293d(12, 26, 16);
+            var rightMotor = new L293d(5, 13, 6);
+            leftMotor.Direction = MotorDirection.Forward;
+            rightMotor.Direction = MotorDirection.Forward;
+            leftMotor.Speed = 80;
+            rightMotor.Speed = 80;
         }
 
         private void Timer_PwmTick(ThreadPoolTimer timer)

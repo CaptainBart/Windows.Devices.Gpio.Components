@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Animations\BlinkAnimation.cs" />
     <Compile Include="Components\DistanceSensedEventArgs.cs" />
+    <Compile Include="Components\L293d.cs" />
     <Compile Include="Components\UltraSonicSensor.cs" />
     <Compile Include="GpioExtensions.cs" />
     <Compile Include="HighResolutionTimer.cs" />

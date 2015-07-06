@@ -74,6 +74,8 @@ namespace Windows.Devices.Gpio
                 {
                     if (value < 0 || value > this.Range) throw new ArgumentOutOfRangeException("value", value, String.Format(CultureInfo.InvariantCulture, "The value should be between 0 and {0}.", this.Range));
                     _value = value;
+
+                    
                 }
             }
         }
@@ -83,7 +85,23 @@ namespace Windows.Devices.Gpio
         /// </summary>
         public void Enable()
         {
-            this.IsEnabled = true;
+            if (!this.IsEnabled)
+            {
+                this.IsEnabled = true;
+                this.EmulatePwm();
+            }
+        }
+
+        /// <summary>
+        /// Disables the Pwn Signal
+        /// </summary>
+        public void Disable()
+        {
+            this.IsEnabled = false;
+        }
+
+        private void EmulatePwm()
+        {
             _pin.Write(GpioPinValue.Low);
             HighResolutionTimer timer = new HighResolutionTimer();
 
@@ -108,12 +126,5 @@ namespace Windows.Devices.Gpio
             });
         }
 
-        /// <summary>
-        /// Disables the Pwn Signal
-        /// </summary>
-        public void Disable()
-        {
-            this.IsEnabled = false;
-        }
     }
 }
