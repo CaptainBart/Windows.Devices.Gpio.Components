@@ -5,9 +5,9 @@ using System.Text;
 using System.Net.Http;
 using Windows.ApplicationModel.Background;
 using Windows.System.Threading;
-using Windows.Devices.Gpio;
 using Windows.Devices.Gpio.Components;
 using Windows.Devices.Gpio.Animations;
+using Windows.Devices.Gpio;
 using System.Diagnostics;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
@@ -36,7 +36,8 @@ namespace TestApp
 
             //this.UCSensor();
             //this.SoftPwm();
-            this.L293dTest();
+            //this.L293dTest();
+            this.PortExpanderTest();
         }
 
         private void UCSensor()
@@ -66,6 +67,19 @@ namespace TestApp
             leftMotor.Speed = 80;
             rightMotor.Speed = 80;
         }
+
+        private async void PortExpanderTest()
+        {
+            var expander = await Mcp230xx.Create(0x20);
+            for(var i = 0; i < 8; i++)
+            {
+                var p = expander.OpenPin(i);
+                p.SetDriveMode(Windows.Devices.Gpio.GpioPinDriveMode.Output);
+                p.Write(GpioPinValue.High);
+            }
+            
+        }
+
 
         private void Timer_PwmTick(ThreadPoolTimer timer)
         {
