@@ -12,8 +12,8 @@ namespace Windows.Devices.Gpio.Components
     public class L293d
     {
         private SoftPwmDriver _enablePin;
-        private GpioPin _in1Pin;
-        private GpioPin _in2Pin;
+        private IGpioPin _in1Pin;
+        private IGpioPin _in2Pin;
 
         /// <summary>
         /// Constructor.
@@ -24,9 +24,9 @@ namespace Windows.Devices.Gpio.Components
         public L293d(int enablePin, int in1Pin, int in2Pin)
         {
             _enablePin = new SoftPwmDriver(enablePin);
-            _in1Pin = GpioController.GetDefault().OpenPin(in1Pin);
+            _in1Pin = GenericGpioController.GetDefault().OpenPin(in1Pin);
             _in1Pin.SetDriveMode(GpioPinDriveMode.Output);
-            _in2Pin = GpioController.GetDefault().OpenPin(in2Pin);
+            _in2Pin = GenericGpioController.GetDefault().OpenPin(in2Pin);
             _in2Pin.SetDriveMode(GpioPinDriveMode.Output);
 
             _in1Pin.Write(GpioPinValue.Low);
@@ -89,11 +89,5 @@ namespace Windows.Devices.Gpio.Components
             }
 
         }
-    }
-
-    public enum MotorDirection
-    {
-        Forward,
-        Backward
     }
 }

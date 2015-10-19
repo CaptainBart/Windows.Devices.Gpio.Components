@@ -13,8 +13,8 @@ namespace Windows.Devices.Gpio.Components
     /// </summary>
     public class UltraSonicSensor
     {
-        private GpioPin _trigPin;
-        private GpioPin _echoPin;
+        private IGpioPin _trigPin;
+        private IGpioPin _echoPin;
         private Stopwatch _timer;
         private bool _sensedBefore;
 
@@ -30,10 +30,10 @@ namespace Windows.Devices.Gpio.Components
         /// <param name="echoPin">pint number of the echo of the sensor.</param>
         public UltraSonicSensor(int trigPin, int echoPin)
         {
-            _trigPin = GpioController.GetDefault().OpenPin(trigPin);
+            _trigPin = GenericGpioController.GetDefault().OpenPin(trigPin);
             _trigPin.SetDriveMode(GpioPinDriveMode.Output);
 
-            _echoPin = GpioController.GetDefault().OpenPin(echoPin);
+            _echoPin = GenericGpioController.GetDefault().OpenPin(echoPin);
             _echoPin.SetDriveMode(GpioPinDriveMode.Input);
 
             _trigPin.Write(GpioPinValue.Low);
@@ -71,7 +71,12 @@ namespace Windows.Devices.Gpio.Components
             }
         }
 
-        private void _echoPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
+        /// <summary>
+        /// Handles the pin's value changed event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void _echoPin_ValueChanged(IGpioPin sender, ValueChangedEventArgs args)
         {
             if (args.Edge == GpioPinEdge.RisingEdge)
             {
@@ -86,6 +91,11 @@ namespace Windows.Devices.Gpio.Components
             }
         }
 
+        /// <summary>
+        /// Raises the distance sended event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void OnDistanceSensed(object sender, DistanceSensedEventArgs e)
         {
             if (this.DistanceSensed != null)

@@ -41,5 +41,18 @@ namespace Windows.Devices.Gpio
                 }
             }
         }
+
+
+        /// <summary>
+        /// Gets the matching edge to detect.
+        /// </summary>
+        /// <param name="value">The value to get the matching edge for.</param>
+        /// <returns>The matchign edge of the value.</returns>
+        public static GpioPinEdge Edge(this GpioPinValue value)
+        {
+            if (value == GpioPinValue.High) return GpioPinEdge.RisingEdge;
+            if (value == GpioPinValue.Low) return GpioPinEdge.FallingEdge;
+            throw new NotSupportedException();
+        }
     }
 }

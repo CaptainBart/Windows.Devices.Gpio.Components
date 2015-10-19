@@ -114,16 +114,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animations\BlinkAnimation.cs" />
+    <Compile Include="Components\Button.cs" />
     <Compile Include="Components\DistanceSensedEventArgs.cs" />
+    <Compile Include="Components\I2cDeviceRegister.cs" />
+    <Compile Include="IPinExpander.cs" />
+    <Compile Include="Components\InterruptEventArgs.cs" />
     <Compile Include="Components\L293d.cs" />
     <Compile Include="Components\Led.cs" />
     <Compile Include="Components\Mcp230xx.cs" />
     <Compile Include="Components\Mcp230xxPin.cs" />
+    <Compile Include="Components\MotorDirection.cs" />
     <Compile Include="Components\UltraSonicSensor.cs" />
+    <Compile Include="GenericGpioController.cs" />
     <Compile Include="GpioExtensions.cs" />
     <Compile Include="HighResolutionTimer.cs" />
+    <Compile Include="IGpioPin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoftPwmDriver.cs" />
+    <Compile Include="SysGpioPin.cs" />
+    <Compile Include="ValueChangedEventArgs.cs" />
     <Content Include="Properties\Windows.Devices.Gpio.Components.rd.xml" />
   </ItemGroup>
   <ItemGroup>

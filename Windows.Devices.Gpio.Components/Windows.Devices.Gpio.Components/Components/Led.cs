@@ -11,7 +11,7 @@ namespace Windows.Devices.Gpio.Components
     /// </summary>
     public class Led
     {
-        private GpioPin _pin;
+        private IGpioPin _pin;
         private GpioPinValue _value = GpioPinValue.Low;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Windows.Devices.Gpio.Components
         /// <param name="pin">Pin the led is connected on.</param>
         public Led(int pin)
         {
-            _pin = GpioController.GetDefault().OpenPin(pin);
+            _pin = GenericGpioController.GetDefault().OpenPin(pin);
             _pin.SetDriveMode(GpioPinDriveMode.Output);
         }
         

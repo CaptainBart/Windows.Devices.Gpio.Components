@@ -9,6 +9,7 @@ using Windows.Devices.Gpio.Components;
 using Windows.Devices.Gpio.Animations;
 using Windows.Devices.Gpio;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -33,12 +34,19 @@ namespace TestApp
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
-
+            //this.LedTest();
             //this.UCSensor();
             //this.SoftPwm();
             //this.L293dTest();
             this.PortExpanderTest();
         }
+
+        //private void LedTest()
+        //{
+        //    var led = new Led(22);
+        //    led.On();
+        //    led.Off();
+        //}
 
         private void UCSensor()
         {
@@ -70,17 +78,46 @@ namespace TestApp
 
         private async void PortExpanderTest()
         {
-            var expander = await Mcp230xx.Create(0x20);
-            for(var i = 0; i < 8; i++)
+            var controller = GenericGpioController.GetDefault();
+            await controller.RegisterMcp23017(64, 0x20, 4); //add 16 additional ports from 64 to 79
+            
+            var pins = new IGpioPin[8];
+            var btns = new Button[8];
+            GpioPinValue value = GpioPinValue.Low;
+            int ledToSkip = -1;
+
+            for (var i = 0; i < btns.Length; i++)
             {
-                var p = expander.OpenPin(i);
-                p.SetDriveMode(Windows.Devices.Gpio.GpioPinDriveMode.Output);
-                p.Write(GpioPinValue.High);
+                var btnPin = controller.OpenPin(64 + i);
+                var btn = new Button(btnPin, GpioPinDriveMode.InputPullUp);
+                btn.PressedChanged += delegate(Button b, EventArgs e) { value = btn.IsPressed ? GpioPinValue.High : GpioPinValue.Low; ledToSkip = Array.IndexOf(btns, b); };
+                btns[i] = btn;
             }
             
+            for (var i = 0; i < pins.Length; i++)
+            {
+                var p = controller.OpenPin(72 + i);
+                p.SetDriveMode(GpioPinDriveMode.Output);
+                p.Write(GpioPinValue.Low);
+
+                pins[i] = p;
+            }
+
+            while (true)
+            {
+                for (var i = 0; i < 8; i++)
+                {
+                    if (i != ledToSkip)
+                    {
+                        var p = pins[i];
+                        p.Write(value);
+                    }
+                }
+
+                await Task.Delay(TimeSpan.FromMilliseconds(50));
+            }
         }
-
-
+        
         private void Timer_PwmTick(ThreadPoolTimer timer)
         {
             var newValue = value + delta;
